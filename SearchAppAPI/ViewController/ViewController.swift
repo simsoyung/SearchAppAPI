@@ -17,15 +17,18 @@ class ViewController: UIViewController {
     let searchBar = UISearchBar()
     let scrollView = UIScrollView()
     let contentView = UIView()
-    var disposeBag = DisposeBag()
+    let disposeBag = DisposeBag()
     let viewModel = APIViewModel()
-
+    
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//        bind()
+//    }
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
         bind()
     }
-    
     func bind(){
         let recentText = PublishSubject<String>()
         let input = APIViewModel.Input(previousSearchText: recentText, searchText: searchBar.rx.text.orEmpty, searchButtonTap: searchBar.rx.searchButtonClicked)
@@ -41,22 +44,22 @@ class ViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
-//        Observable.zip(
-//            tableView.rx.modelSelected(String.self),
-//            tableView.rx.itemSelected
-//        )
-//        .debug()
-//        .map{ "검색어는 \($0.0), \($0.1)"}
-//        .subscribe(with: self) { owenr, value in
-//            //print(value)
-//            recentText.onNext(value)
-//        }
-//        .disposed(by: disposeBag)
         tableView.rx.modelSelected(App.self)
             .map{ $0.trackName }
             .subscribe(with: self) { owner, value in
                 print("선택된 검색어: \(value)")
                 recentText.onNext(value)
+            }
+            .disposed(by: disposeBag)
+        
+        tableView.rx.modelSelected(App.self)
+            .flatMap { app -> Observable<App> in
+                return Observable.just(app)
+            }
+            .subscribe(with: self) { owner, value in
+                let detail = DetailViewController()
+                detail.configure(data: [value])
+                owner.navigationController?.pushViewController(detail, animated: true)
             }
             .disposed(by: disposeBag)
         
@@ -72,7 +75,7 @@ class ViewController: UIViewController {
         view.backgroundColor = .white
         navigationItem.title = "검색"
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.largeTitleDisplayMode = .always
+        //navigationItem.largeTitleDisplayMode = .automatic
         navigationController?.navigationBar.largeTitleTextAttributes = [
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 34, weight: .bold),
             NSAttributedString.Key.foregroundColor: UIColor.black
@@ -106,7 +109,7 @@ class ViewController: UIViewController {
         tableView.snp.makeConstraints { make in
             make.top.equalTo(collectionView.snp.bottom)
             make.horizontalEdges.equalToSuperview()
-            make.height.equalTo(500)
+            make.height.equalTo(550)
             make.bottom.equalToSuperview()
         }
     }

@@ -15,8 +15,7 @@ class CustomCollectionViewCell: UICollectionViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.image = UIImage(named: "노량")
-        imageView.layer.cornerRadius = 30
+        imageView.layer.cornerRadius = 20
         return imageView
     }()
     
@@ -29,14 +28,14 @@ class CustomCollectionViewCell: UICollectionViewCell {
     }
     override func layoutSubviews() {
         super.layoutSubviews()
-        imageView.layer.cornerRadius = 30
+        imageView.layer.cornerRadius = 20
         imageView.layer.masksToBounds = true
     }
     
-//    override func prepareForReuse() {
-//        super.prepareForReuse()
-//        imageView.image = nil
-//    }
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        imageView.image = nil
+    }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

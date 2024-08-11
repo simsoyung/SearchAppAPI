@@ -15,7 +15,7 @@ final class TableViewCell: UITableViewCell {
     
     static let identifier = "TableViewCell"
     var disposeBag = DisposeBag()
-    let viewModel = APIViewModel()
+    let viewModel = TabelViewModel()
     
     let appNameLabel: UILabel = {
         let label = UILabel()
