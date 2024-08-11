@@ -27,7 +27,6 @@ class ViewController: UIViewController {
     }
     
     func bind(){
-        
         let recentText = PublishSubject<String>()
         let input = APIViewModel.Input(previousSearchText: recentText, searchText: searchBar.rx.text.orEmpty, searchButtonTap: searchBar.rx.searchButtonClicked)
         let output = viewModel.transform(input: input)
@@ -38,7 +37,7 @@ class ViewController: UIViewController {
                 cell.appNameLabel.text = element.trackName
                 let url = URL(string: element.artworkUrl60)
                 cell.appIconImageView.kf.setImage(with: url)
-                cell.screenshots = element.screenshotUrls
+                cell.configure(data: element)
             }
             .disposed(by: disposeBag)
         
@@ -100,7 +99,7 @@ class ViewController: UIViewController {
         collectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: CollectionViewCell.id)
         collectionView.snp.makeConstraints { make in
             make.top.equalToSuperview()
-            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).offset(8)
+            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(8)
             make.height.equalTo(44)
         }
         tableView.register(TableViewCell.self, forCellReuseIdentifier: TableViewCell.identifier)

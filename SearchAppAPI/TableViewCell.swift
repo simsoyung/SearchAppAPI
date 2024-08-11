@@ -15,6 +15,7 @@ final class TableViewCell: UITableViewCell {
     
     static let identifier = "TableViewCell"
     var disposeBag = DisposeBag()
+    let viewModel = APIViewModel()
     
     let appNameLabel: UILabel = {
         let label = UILabel()
@@ -43,12 +44,6 @@ final class TableViewCell: UITableViewCell {
     
     let collectionView: UICollectionView
     
-    var screenshots: [String] = [] {
-        didSet {
-            bind()
-        }
-    }
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -64,6 +59,7 @@ final class TableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.selectionStyle = .none
         configure()
+        bind()
     }
   
     required init?(coder: NSCoder) {
@@ -100,14 +96,22 @@ final class TableViewCell: UITableViewCell {
             make.bottom.equalToSuperview().inset(10)
         }
     }
-    private func bind(){
-        Observable.just(screenshots)
+    private func bind() {
+        viewModel.screenshotRelay
             .bind(to: collectionView.rx.items(cellIdentifier: CustomCollectionViewCell.identifier, cellType: CustomCollectionViewCell.self)) { row, element, cell in
                 if let url = URL(string: element) {
                     cell.imageView.kf.setImage(with: url)
                 }
             }
             .disposed(by: disposeBag)
+    }
+    
+    func configure(data: App) {
+        appNameLabel.text = data.trackName
+        if let url = URL(string: data.artworkUrl60) {
+            appIconImageView.kf.setImage(with: url)
+        }
+        viewModel.updateScreenshots(with: data.screenshotUrls)
     }
 }
 

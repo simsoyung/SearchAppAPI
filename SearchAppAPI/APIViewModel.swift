@@ -12,6 +12,7 @@ import RxCocoa
 final class APIViewModel {
     let disposeBag = DisposeBag()
     lazy var recentList: [String] = UserDefaultManager.recentList //최근 검색어 담을 배열
+    let screenshotRelay = BehaviorRelay<[String]>(value: [])
     
     struct Input{
         let previousSearchText: PublishSubject<String> // 테이블뷰 누르면 최근검색어 추가, 클릭한 테이블뷰의 글자
@@ -22,7 +23,9 @@ final class APIViewModel {
         let appList: Observable<[App]> //테이블뷰에 들어올 데이터
         let recentList: BehaviorSubject<[String]> //컬렉션뷰 리스트에 추가
     }
-    
+    func updateScreenshots(with urls: [String]) {
+        screenshotRelay.accept(urls)
+    }
     func transform(input: Input) -> Output {
         let recentListSubject = BehaviorSubject(value: recentList)
         let appList = PublishSubject<[App]>()

@@ -33,10 +33,10 @@ class CustomCollectionViewCell: UICollectionViewCell {
         imageView.layer.masksToBounds = true
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        imageView.image = nil
-    }
+//    override func prepareForReuse() {
+//        super.prepareForReuse()
+//        imageView.image = nil
+//    }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
