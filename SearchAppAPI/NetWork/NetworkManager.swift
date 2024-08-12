@@ -86,7 +86,7 @@ final class NetworkManager {
                 }
             }.resume()
             return Disposables.create()
-        }//.debug("API 조회")
+        }.debug("API 조회")
         return result
     }
 }

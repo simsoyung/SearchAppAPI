@@ -47,6 +47,13 @@ final class APIViewModel {
             .distinctUntilChanged() // 동일한 글자는 중복으로 통신하지 않음
             .flatMap { value -> Observable<AppStoreResponse> in
                 NetworkManager.shared.callItunesApp(text: value)
+                    .catch { error in
+                        return Observable<AppStoreResponse>.never()
+                    }
+            }
+            .catch { error in
+                let error = AppStoreResponse(resultCount: 0, results: [])
+                return Observable.just(error)
             }
             //.debug("체크2")
             .subscribe(with: self, onNext: { owner, value in
